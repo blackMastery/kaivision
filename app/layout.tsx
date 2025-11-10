@@ -17,11 +17,20 @@ export const metadata: Metadata = {
     siteName: 'Kaivision',
     type: 'website',
     locale: 'en_US',
+    images: [
+      {
+        url: '/banner.png',
+        width: 1200,
+        height: 630,
+        alt: 'Get a Free Professional Website for Your Business',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Get a Free Professional Website for Your Business',
     description: 'Get found online, build credibility, and turn visitors into customers. Free custom-designed website. Limited to 10 businesses.',
+    images: ['/banner.png'],
   },
 };
 
