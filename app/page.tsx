@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { CheckCircle, Code, Zap, TrendingUp, Clock, X, AlertCircle } from 'lucide-react';
+import { CheckCircle, Code, Zap, TrendingUp, Clock, X, AlertCircle, Calendar } from 'lucide-react';
+import { PopupButton } from 'react-calendly';
 
 export default function FreeWebsiteOffer() {
   const [spotsLeft, setSpotsLeft] = useState(10);
@@ -19,10 +20,16 @@ export default function FreeWebsiteOffer() {
     type: 'success' | 'error';
     message: string;
   } | null>(null);
+  const [showBookingButton, setShowBookingButton] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
   const heroY = useTransform(scrollY, [0, 300], [0, -50]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +55,14 @@ export default function FreeWebsiteOffer() {
         message: 'Application received! I\'ll review and get back to you within 24 hours.'
       });
 
-
+      setShowBookingButton(true);
+      setFormData({
+        businessName: '',
+        industry: '',
+        email: '',
+        currentSituation: '',
+        goal: ''
+      });
     } catch (error) {
       console.error('Error submitting application:', error);
       setNotification({
@@ -408,6 +422,52 @@ export default function FreeWebsiteOffer() {
         </div>
       </section>
 
+      {/* Schedule a Call Section */}
+      <section className="py-20 px-6 bg-black/20">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Want to Discuss Your Project First?
+            </h2>
+            <p className="text-gray-400 text-lg mb-8">
+              Schedule a free 30-minute discovery call to discuss your needs and see if we're a good fit
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8"
+          >
+            <div className="flex flex-col md:flex-row gap-6 items-center justify-between mb-6">
+              <div className="flex items-start gap-4">
+                <Calendar className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Free Discovery Call</h3>
+                  <p className="text-gray-400 text-sm">
+                    30 minutes • No commitment required • Learn about your project goals
+                  </p>
+                </div>
+              </div>
+              {isMounted && (
+                <PopupButton
+                  url="https://calendly.com/kev-cadogan300/30min"
+                  rootElement={document.body}
+                  text="Schedule Call"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-xl hover:shadow-purple-500/30 transition-all duration-300 whitespace-nowrap"
+                />
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="py-20 px-6">
         <motion.div
@@ -539,22 +599,35 @@ export default function FreeWebsiteOffer() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className={`flex items-start gap-3 p-4 rounded-lg ${
+                  className={`p-4 rounded-lg ${
                     notification.type === 'success'
                       ? 'bg-green-500/20 border border-green-500/50'
                       : 'bg-red-500/20 border border-red-500/50'
                   }`}
                 >
-                  {notification.type === 'success' ? (
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                  ) : (
-                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-3">
+                    {notification.type === 'success' ? (
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                    )}
+                    <p className={`text-sm ${
+                      notification.type === 'success' ? 'text-green-200' : 'text-red-200'
+                    }`}>
+                      {notification.message}
+                    </p>
+                  </div>
+
+                  {notification.type === 'success' && showBookingButton && isMounted && (
+                    <div className="mt-4">
+                      <PopupButton
+                        url="https://calendly.com/kev-cadogan300/30min"
+                        rootElement={document.body}
+                        text="Schedule Discovery Call Now"
+                        className="w-full bg-white text-purple-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+                      />
+                    </div>
                   )}
-                  <p className={`text-sm ${
-                    notification.type === 'success' ? 'text-green-200' : 'text-red-200'
-                  }`}>
-                    {notification.message}
-                  </p>
                 </motion.div>
               )}
 
