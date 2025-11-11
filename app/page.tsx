@@ -29,6 +29,23 @@ export default function FreeWebsiteOffer() {
 
   useEffect(() => {
     setIsMounted(true);
+
+    // Fetch approved applications count
+    const fetchCount = async () => {
+      try {
+        const response = await fetch('/api/applications/count');
+        const data = await response.json();
+        console.log("🚀 ~ fetchCount ~ data:", data)
+
+        if (data.success) {
+          setSpotsLeft(data.spotsLeft);
+        }
+      } catch (error) {
+        console.error('Error fetching approved count:', error);
+      }
+    };
+
+    fetchCount();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -183,6 +200,17 @@ export default function FreeWebsiteOffer() {
           >
             ⏱️ Average response time: 24 hours
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9 }}
+            className="mt-6 inline-block bg-red-500/20 border border-red-500/30 rounded-lg px-6 py-3"
+          >
+            <p className="text-red-400 font-semibold">
+              ⚠️ Offer ends November 30th, 2025
+            </p>
+          </motion.div>
         </div>
       </motion.section>
 
@@ -479,9 +507,9 @@ export default function FreeWebsiteOffer() {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Ready to Get Your Free Website?
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
+          {/* <p className="text-xl text-gray-300 mb-8">
             Join the {10 - spotsLeft} businesses already building their online presence
-          </p>
+          </p> */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

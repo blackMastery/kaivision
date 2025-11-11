@@ -73,3 +73,19 @@ export async function getBusinessApplicationsByEmail(email: string) {
 
   return data as BusinessApplication[];
 }
+
+/**
+ * Get count of approved business applications
+ */
+export async function getApprovedApplicationsCount() {
+  const { count, error } = await supabase
+    .from('business_applications')
+    .select('*', { count: 'exact', head: true })
+    .eq('isApproved', true);
+
+  if (error) {
+    throw new Error(`Failed to fetch approved applications count: ${error.message}`);
+  }
+
+  return count || 0;
+}

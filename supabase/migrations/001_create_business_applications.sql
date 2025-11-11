@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS business_applications (
   email VARCHAR(255) NOT NULL,
   current_situation TEXT NOT NULL,
   goal TEXT NOT NULL,
+    isApproved boolean null default false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL
 );
