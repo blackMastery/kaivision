@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { CheckCircle, Code, Zap, TrendingUp, Clock, X } from 'lucide-react';
+import { CheckCircle, Code, Zap, TrendingUp, Clock, X, AlertCircle } from 'lucide-react';
 
 export default function FreeWebsiteOffer() {
   const [spotsLeft, setSpotsLeft] = useState(10);
@@ -12,10 +12,13 @@ export default function FreeWebsiteOffer() {
     industry: '',
     email: '',
     currentSituation: '',
-    goal: '',
-    monthlyRevenue: ''
+    goal: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error';
+    message: string;
+  } | null>(null);
 
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -25,20 +28,40 @@ export default function FreeWebsiteOffer() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate submission - replace with your actual API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    alert('Application received! I\'ll review and get back to you within 24 hours.');
-    setIsFormOpen(false);
-    setFormData({
-      businessName: '',
-      industry: '',
-      email: '',
-      currentSituation: '',
-      goal: '',
-      monthlyRevenue: ''
-    });
-    setIsSubmitting(false);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit application');
+      }
+
+      setNotification({
+        type: 'success',
+        message: 'Application received! I\'ll review and get back to you within 24 hours.'
+      });
+
+
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      setNotification({
+        type: 'error',
+        message: 'Failed to submit application. Please try again or contact support.'
+      });
+
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -505,29 +528,35 @@ export default function FreeWebsiteOffer() {
                 />
               </div>
 
-              <div>
-                <label className="block text-gray-300 mb-2 font-medium">Monthly Revenue / Funding Status *</label>
-                <select
-                  name="monthlyRevenue"
-                  value={formData.monthlyRevenue}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors"
-                >
-                  <option value="">Select range...</option>
-                  <option value="pre-revenue">Pre-revenue / Just starting</option>
-                  <option value="0-5k">$0 - $5,000</option>
-                  <option value="5k-20k">$5,000 - $20,000</option>
-                  <option value="20k-50k">$20,000 - $50,000</option>
-                  <option value="50k+">$50,000+</option>
-                </select>
-              </div>
-
               <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
                 <p className="text-gray-300 text-sm">
                   ✅ By submitting, you confirm you can provide all content (copy, images, branding) for your website.
                 </p>
               </div>
+
+              {notification && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className={`flex items-start gap-3 p-4 rounded-lg ${
+                    notification.type === 'success'
+                      ? 'bg-green-500/20 border border-green-500/50'
+                      : 'bg-red-500/20 border border-red-500/50'
+                  }`}
+                >
+                  {notification.type === 'success' ? (
+                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                  ) : (
+                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  )}
+                  <p className={`text-sm ${
+                    notification.type === 'success' ? 'text-green-200' : 'text-red-200'
+                  }`}>
+                    {notification.message}
+                  </p>
+                </motion.div>
+              )}
 
               <motion.button
                 type="submit"
