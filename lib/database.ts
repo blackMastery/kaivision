@@ -11,6 +11,7 @@ export async function createBusinessApplication(data: BusinessApplicationInsert)
       business_name: data.business_name,
       industry: data.industry,
       email: data.email,
+      phone_number: data.phone_number || null,
       current_situation: data.current_situation,
       goal: data.goal,
     })

@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
       business_name: body.businessName,
       industry: body.industry,
       email: body.email.toLowerCase().trim(),
+      phone_number: body.phoneNumber?.trim() || null,
       current_situation: body.currentSituation,
       goal: body.goal,
     };

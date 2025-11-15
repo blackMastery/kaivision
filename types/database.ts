@@ -3,6 +3,7 @@ export interface BusinessApplication {
   business_name: string;
   industry: string;
   email: string;
+  phone_number: string | null;
   current_situation: string;
   goal: string;
   created_at: string;
@@ -13,6 +14,7 @@ export interface BusinessApplicationInsert {
   business_name: string;
   industry: string;
   email: string;
+  phone_number?: string | null;
   current_situation: string;
   goal: string;
 }

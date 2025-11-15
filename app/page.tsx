@@ -12,6 +12,7 @@ export default function FreeWebsiteOffer() {
     businessName: '',
     industry: '',
     email: '',
+    phoneNumber: '',
     currentSituation: '',
     goal: ''
   });
@@ -77,6 +78,7 @@ export default function FreeWebsiteOffer() {
         businessName: '',
         industry: '',
         email: '',
+        phoneNumber: '',
         currentSituation: '',
         goal: ''
       });
@@ -587,6 +589,18 @@ export default function FreeWebsiteOffer() {
                   required
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors"
                   placeholder="you@company.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 mb-2 font-medium">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors"
+                  placeholder="+1 (555) 123-4567"
                 />
               </div>
 
