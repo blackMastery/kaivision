@@ -159,7 +159,7 @@ export default function FreeWebsiteOffer() {
             transition={{ delay: 0.3 }}
             className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
           >
-            Get a <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Professional Website</span>
+            Get a <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Static Website</span>
             <br />
             <span className="text-4xl md:text-6xl">Completely Free</span>
           </motion.h1>
@@ -170,7 +170,7 @@ export default function FreeWebsiteOffer() {
             transition={{ delay: 0.4 }}
             className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto"
           >
-            I'm building my portfolio and giving away <span className="text-purple-400 font-semibold">10 custom-designed websites</span> to qualified businesses.
+            I'm building my portfolio and giving away <span className="text-purple-400 font-semibold">10 static websites</span> to qualified businesses.
           </motion.p>
 
           <motion.p
@@ -179,10 +179,10 @@ export default function FreeWebsiteOffer() {
             transition={{ delay: 0.5 }}
             className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto"
           >
-            Get found online, build credibility, and turn visitors into customers. No strings attached.
+            Perfect for businesses that need a simple, professional online presence. Get found online, build credibility, and turn visitors into customers. No strings attached.
           </motion.p>
 
-          <motion.button
+            <motion.button
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
@@ -191,7 +191,7 @@ export default function FreeWebsiteOffer() {
             onClick={() => setIsFormOpen(true)}
             className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-12 py-5 rounded-full text-xl font-semibold hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
           >
-            Claim Your Free Website
+            Claim Your Free Static Website
           </motion.button>
 
           <motion.p
@@ -230,7 +230,7 @@ export default function FreeWebsiteOffer() {
               What You Get (Free)
             </h2>
             <p className="text-gray-400 text-lg">
-              Everything you need to establish your online presence
+              A static website - everything you need to establish your online presence
             </p>
           </motion.div>
 
@@ -425,7 +425,7 @@ export default function FreeWebsiteOffer() {
             {[
               { day: "Day 1", title: "Apply & Get Approved", desc: "Fill out the form below. I'll review and respond within 24 hours." },
               { day: "Day 2-3", title: "Discovery Call", desc: "15-minute call to discuss your vision, goals, and gather requirements." },
-              { day: "Day 4-7", title: "Design & Development", desc: "I build your site while keeping you updated on progress." },
+              { day: "Day 4-7", title: "Design & Development", desc: "I build your static website while keeping you updated on progress." },
               { day: "Day 8", title: "Review & Launch", desc: "You review, request changes, then we launch your site live." }
             ].map((step, index) => (
               <motion.div
@@ -507,7 +507,7 @@ export default function FreeWebsiteOffer() {
           className="max-w-4xl mx-auto text-center bg-gradient-to-r from-purple-900/50 to-pink-900/50 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-12"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Get Your Free Website?
+            Ready to Get Your Free Static Website?
           </h2>
           {/* <p className="text-xl text-gray-300 mb-8">
             Join the {10 - spotsLeft} businesses already building their online presence
@@ -543,7 +543,7 @@ export default function FreeWebsiteOffer() {
             className="bg-slate-900 border border-purple-500/30 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-3xl font-bold text-white">Apply for Your Free Website</h3>
+              <h3 className="text-3xl font-bold text-white">Apply for Your Free Static Website</h3>
               <button
                 onClick={() => setIsFormOpen(false)}
                 className="text-gray-400 hover:text-white transition-colors"
@@ -631,8 +631,11 @@ export default function FreeWebsiteOffer() {
               </div>
 
               <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
-                <p className="text-gray-300 text-sm">
+                <p className="text-gray-300 text-sm mb-2">
                   ✅ By submitting, you confirm you can provide all content (copy, images, branding) for your website.
+                </p>
+                <p className="text-gray-300 text-sm font-semibold">
+                  📌 Note: This offer is for a <span className="text-purple-400">Static Website</span> - perfect for showcasing your business with fixed content pages.
                 </p>
               </div>
 
