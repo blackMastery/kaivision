@@ -214,22 +214,17 @@ export default function FreeWebsiteOffer() {
                 ].map((item, index) => (
                   <motion.div
                     key={item.label}
-                    initial={{ y: 0 }}
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{
-                      duration: 0.5,
-                      delay: index * 0.1,
-                      repeat: Infinity,
-                      repeatDelay: 1
-                    }}
                     className="text-center"
                   >
                     <motion.div
                       key={item.value}
-                      initial={{ scale: 1.2, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                      className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold text-3xl md:text-4xl lg:text-5xl px-5 md:px-6 py-4 md:py-5 rounded-2xl min-w-[4.5rem] md:min-w-[5.5rem] lg:min-w-[6rem] shadow-lg shadow-blue-200/50"
+                      // initial={{ scale: 1.2, opacity: 0 }}
+                      // animate={{ scale: 1, opacity: 1 }}
+                      // transition={{ 
+                      //   duration: 0.8,
+                      //   ease: [0.25, 0.1, 0.25, 1]
+                      // }}
+                      className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold text-3xl md:text-4xl lg:text-5xl px-5 md:px-6 py-4 md:py-5 rounded-2xl w-[4.5rem] md:w-[5.5rem] lg:w-[6rem] shadow-lg shadow-blue-200/50 flex items-center justify-center"
                     >
                       {String(item.value).padStart(2, '0')}
                     </motion.div>
