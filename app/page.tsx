@@ -23,9 +23,14 @@ export default function FreeWebsiteOffer() {
   } | null>(null);
   const [showBookingButton, setShowBookingButton] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
 
   const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
   const heroY = useTransform(scrollY, [0, 300], [0, -50]);
 
   useEffect(() => {
@@ -47,6 +52,30 @@ export default function FreeWebsiteOffer() {
     };
 
     fetchCount();
+
+    // Countdown timer
+    const targetDate = new Date('November 30, 2025 23:59:59').getTime();
+    
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((difference % (1000 * 60)) / 1000)
+        });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -105,13 +134,13 @@ export default function FreeWebsiteOffer() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50/50 to-pink-50/30">
       {/* Hero Section */}
       <motion.section
-        style={{ opacity: heroOpacity, y: heroY }}
+        style={{ y: heroY }}
         className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden"
       >
-        {/* Animated background elements */}
+        {/* Animated background elements - subtle and light */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
             animate={{
@@ -123,7 +152,7 @@ export default function FreeWebsiteOffer() {
               repeat: Infinity,
               ease: "linear"
             }}
-            className="absolute top-1/4 -left-48 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+            className="absolute top-1/4 -left-48 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"
           />
           <motion.div
             animate={{
@@ -135,20 +164,20 @@ export default function FreeWebsiteOffer() {
               repeat: Infinity,
               ease: "linear"
             }}
-            className="absolute bottom-1/4 -right-48 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
+            className="absolute bottom-1/4 -right-48 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl"
           />
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
-          {/* Spots remaining badge */}
+          {/* Spots remaining badge - Apple glass style */}
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 rounded-full px-6 py-3 mb-8 backdrop-blur-sm"
+            className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-xl border border-red-200/50 rounded-full px-6 py-3 mb-8 shadow-lg shadow-red-100/50"
           >
             <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-            <span className="text-red-400 font-semibold text-sm">
+            <span className="text-red-600 font-semibold text-sm">
               Only {spotsLeft} Spots Remaining
             </span>
           </motion.div>
@@ -157,27 +186,74 @@ export default function FreeWebsiteOffer() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+            className="text-5xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight"
           >
-            Get a <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Static Website</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Completely Free</span>
             <br />
-            <span className="text-4xl md:text-6xl">Completely Free</span>
+            <span className="text-4xl md:text-6xl text-gray-800">Static Website</span>
           </motion.h1>
 
-          <motion.p
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-300 mb-4 max-w-3xl mx-auto"
+          {/* Countdown Clock - Apple glass style */}
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+            className="mb-8"
           >
-            I'm building my portfolio and giving away <span className="text-purple-400 font-semibold">10 static websites</span> to qualified businesses.
-          </motion.p>
+            <div className="inline-flex flex-col items-center gap-4 md:gap-5 bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl px-10 md:px-12 py-6 md:py-8 shadow-xl shadow-gray-200/50">
+              <div className="flex items-center gap-2">
+                <Clock className="w-6 h-6 md:w-7 md:h-7 text-blue-600 animate-pulse" />
+                <span className="text-gray-700 font-semibold text-base md:text-lg">Offer ends in:</span>
+              </div>
+              <div className="flex items-center gap-4 md:gap-6">
+                {[
+                  { label: 'Days', value: timeLeft.days },
+                  { label: 'Hours', value: timeLeft.hours },
+                  { label: 'Minutes', value: timeLeft.minutes },
+                  { label: 'Seconds', value: timeLeft.seconds }
+                ].map((item, index) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ y: 0 }}
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{
+                      duration: 0.5,
+                      delay: index * 0.1,
+                      repeat: Infinity,
+                      repeatDelay: 1
+                    }}
+                    className="text-center"
+                  >
+                    <motion.div
+                      key={item.value}
+                      initial={{ scale: 1.2, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold text-3xl md:text-4xl lg:text-5xl px-5 md:px-6 py-4 md:py-5 rounded-2xl min-w-[4.5rem] md:min-w-[5.5rem] lg:min-w-[6rem] shadow-lg shadow-blue-200/50"
+                    >
+                      {String(item.value).padStart(2, '0')}
+                    </motion.div>
+                    <div className="text-gray-600 text-sm md:text-base mt-3 font-semibold">{item.label}</div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
 
           <motion.p
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto"
+          >
+            I'm building my portfolio and giving away <span className="text-blue-600 font-semibold">10 static websites</span> to qualified businesses.
+          </motion.p>
+
+          <motion.p
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto"
           >
             Perfect for businesses that need a simple, professional online presence. Get found online, build credibility, and turn visitors into customers. No strings attached.
           </motion.p>
@@ -185,11 +261,11 @@ export default function FreeWebsiteOffer() {
             <motion.button
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.7 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsFormOpen(true)}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-12 py-5 rounded-full text-xl font-semibold hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-12 py-5 rounded-full text-xl font-semibold shadow-xl shadow-blue-200/50 hover:shadow-2xl hover:shadow-blue-300/50 transition-all duration-300"
           >
             Claim Your Free Static Website
           </motion.button>
@@ -197,27 +273,16 @@ export default function FreeWebsiteOffer() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
+            transition={{ delay: 0.9 }}
             className="text-gray-500 text-sm mt-4"
           >
             ⏱️ Average response time: 24 hours
           </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9 }}
-            className="mt-6 inline-block bg-red-500/20 border border-red-500/30 rounded-lg px-6 py-3"
-          >
-            <p className="text-red-400 font-semibold">
-              ⚠️ Offer ends November 30th, 2025
-            </p>
-          </motion.div>
         </div>
       </motion.section>
 
       {/* What's Included Section */}
-      <section className="py-20 px-6 relative">
+      <section className="py-20 px-6 relative bg-gradient-to-b from-transparent to-gray-50/50">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -226,10 +291,10 @@ export default function FreeWebsiteOffer() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               What You Get (Free)
             </h2>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-600 text-lg">
               A static website - everything you need to establish your online presence
             </p>
           </motion.div>
@@ -258,12 +323,12 @@ export default function FreeWebsiteOffer() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-purple-500/50 transition-all duration-300"
+                whileHover={{ y: -8, scale: 1.02 }}
+                className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-8 hover:border-blue-300/50 transition-all duration-300 shadow-lg shadow-gray-200/30 hover:shadow-xl hover:shadow-gray-300/40"
               >
-                <div className="text-purple-400 mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
+                <div className="text-blue-600 mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -273,9 +338,9 @@ export default function FreeWebsiteOffer() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-8"
+            className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-8 shadow-xl shadow-gray-200/30"
           >
-            <h3 className="text-2xl font-bold text-white mb-6 text-center">Also Included</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Also Included</h3>
             <div className="grid md:grid-cols-2 gap-4">
               {[
                 "Works perfectly on all devices (phone, tablet, desktop)",
@@ -291,9 +356,9 @@ export default function FreeWebsiteOffer() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-3 text-gray-300"
+                  className="flex items-center gap-3 text-gray-700"
                 >
-                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
                   <span>{item}</span>
                 </motion.div>
               ))}
@@ -303,7 +368,7 @@ export default function FreeWebsiteOffer() {
       </section>
 
       {/* Requirements Section */}
-      <section className="py-20 px-6 bg-black/20">
+      <section className="py-20 px-6 bg-gradient-to-b from-gray-50/50 to-white">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -311,10 +376,10 @@ export default function FreeWebsiteOffer() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
               What You Need to Provide
             </h2>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-600 text-lg">
               To keep this free, you'll need to have these ready
             </p>
           </motion.div>
@@ -323,7 +388,7 @@ export default function FreeWebsiteOffer() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 space-y-4"
+            className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-8 space-y-4 shadow-xl shadow-gray-200/30"
           >
             {[
               "All website copy and content (text for each page)",
@@ -337,10 +402,10 @@ export default function FreeWebsiteOffer() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-start gap-3 text-gray-300"
+                className="flex items-start gap-3 text-gray-700"
               >
-                <div className="w-6 h-6 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-purple-400 text-sm font-bold">{index + 1}</span>
+                <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-blue-600 text-sm font-bold">{index + 1}</span>
                 </div>
                 <span>{item}</span>
               </motion.div>
@@ -353,9 +418,9 @@ export default function FreeWebsiteOffer() {
             viewport={{ once: true }}
             className="mt-8 text-center"
           >
-            <p className="text-gray-400 text-base">
+            <p className="text-gray-600 text-base">
               💡 Don't have content ready?
-              <a href="https://kevportfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 transition-colors ml-1 font-semibold">
+              <a href="https://kevportfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 transition-colors ml-1 font-semibold">
                 I offer professional copywriting and branding services
               </a>
             </p>
@@ -364,7 +429,7 @@ export default function FreeWebsiteOffer() {
       </section>
 
       {/* Upgrade Options */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-gradient-to-b from-white to-gray-50/50">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -372,10 +437,10 @@ export default function FreeWebsiteOffer() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Want More? Easy Upgrades Available
             </h2>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-600 text-lg">
               Once your site is live, you can add these features anytime
             </p>
           </motion.div>
@@ -393,11 +458,11 @@ export default function FreeWebsiteOffer() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:border-purple-500/50 transition-all duration-300"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-2xl p-6 hover:border-blue-300/50 transition-all duration-300 shadow-lg shadow-gray-200/30 hover:shadow-xl hover:shadow-gray-300/40"
               >
-                <h3 className="text-lg font-semibold text-white mb-2">{upgrade.title}</h3>
-                <p className="text-gray-400 text-sm">{upgrade.desc}</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{upgrade.title}</h3>
+                <p className="text-gray-600 text-sm">{upgrade.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -405,7 +470,7 @@ export default function FreeWebsiteOffer() {
       </section>
 
       {/* Timeline */}
-      <section className="py-20 px-6 bg-black/20">
+      <section className="py-20 px-6 bg-gradient-to-b from-gray-50/50 to-white">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -413,10 +478,10 @@ export default function FreeWebsiteOffer() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
               From Application to Launch
             </h2>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-600 text-lg">
               Here's what happens after you apply
             </p>
           </motion.div>
@@ -437,14 +502,14 @@ export default function FreeWebsiteOffer() {
                 className="flex gap-6 items-start"
               >
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-200/50">
                     <Clock className="w-8 h-8 text-white" />
                   </div>
                 </div>
-                <div className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
-                  <div className="text-purple-400 font-semibold mb-2">{step.day}</div>
-                  <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
-                  <p className="text-gray-400">{step.desc}</p>
+                <div className="flex-1 bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-2xl p-6 shadow-lg shadow-gray-200/30">
+                  <div className="text-blue-600 font-semibold mb-2">{step.day}</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
+                  <p className="text-gray-600">{step.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -453,7 +518,7 @@ export default function FreeWebsiteOffer() {
       </section>
 
       {/* Schedule a Call Section */}
-      <section className="py-20 px-6 bg-black/20">
+      <section className="py-20 px-6 bg-gradient-to-b from-white to-gray-50/50">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -461,10 +526,10 @@ export default function FreeWebsiteOffer() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Want to Discuss Your Project First?
             </h2>
-            <p className="text-gray-400 text-lg mb-8">
+            <p className="text-gray-600 text-lg mb-8">
               Schedule a free 30-minute discovery call to discuss your needs and see if we're a good fit
             </p>
           </motion.div>
@@ -473,14 +538,14 @@ export default function FreeWebsiteOffer() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8"
+            className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-8 shadow-xl shadow-gray-200/30"
           >
             <div className="flex flex-col md:flex-row gap-6 items-center justify-between mb-6">
               <div className="flex items-start gap-4">
-                <Calendar className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
+                <Calendar className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Free Discovery Call</h3>
-                  <p className="text-gray-400 text-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Free Discovery Call</h3>
+                  <p className="text-gray-600 text-sm">
                     30 minutes • No commitment required • Learn about your project goals
                   </p>
                 </div>
@@ -490,7 +555,7 @@ export default function FreeWebsiteOffer() {
                   url="https://calendly.com/kev-cadogan300/30min"
                   rootElement={document.body}
                   text="Schedule Call"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-xl hover:shadow-purple-500/30 transition-all duration-300 whitespace-nowrap"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-semibold shadow-lg shadow-blue-200/50 hover:shadow-xl hover:shadow-blue-300/50 transition-all duration-300 whitespace-nowrap"
                 />
               )}
             </div>
@@ -499,24 +564,24 @@ export default function FreeWebsiteOffer() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-gradient-to-b from-gray-50/50 to-white">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto text-center bg-gradient-to-r from-purple-900/50 to-pink-900/50 backdrop-blur-sm border border-purple-500/30 rounded-3xl p-12"
+          className="max-w-4xl mx-auto text-center bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-12 shadow-2xl shadow-gray-200/40"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Ready to Get Your Free Static Website?
           </h2>
-          {/* <p className="text-xl text-gray-300 mb-8">
+          {/* <p className="text-xl text-gray-600 mb-8">
             Join the {10 - spotsLeft} businesses already building their online presence
           </p> */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsFormOpen(true)}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-12 py-5 rounded-full text-xl font-semibold hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-12 py-5 rounded-full text-xl font-semibold shadow-xl shadow-blue-200/50 hover:shadow-2xl hover:shadow-blue-300/50 transition-all duration-300"
           >
             Apply Now (Free)
           </motion.button>
@@ -532,7 +597,7 @@ export default function FreeWebsiteOffer() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+          className="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-6"
           onClick={() => setIsFormOpen(false)}
         >
           <motion.div
@@ -540,13 +605,13 @@ export default function FreeWebsiteOffer() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-slate-900 border border-purple-500/30 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-white/90 backdrop-blur-2xl border border-gray-200/50 rounded-3xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-gray-300/50"
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-3xl font-bold text-white">Apply for Your Free Static Website</h3>
+              <h3 className="text-3xl font-bold text-gray-900">Apply for Your Free Static Website</h3>
               <button
                 onClick={() => setIsFormOpen(false)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -554,88 +619,88 @@ export default function FreeWebsiteOffer() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-gray-300 mb-2 font-medium">Business Name *</label>
+                <label className="block text-gray-700 mb-2 font-medium">Business Name *</label>
                 <input
                   type="text"
                   name="businessName"
                   value={formData.businessName}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
                   placeholder="Acme Corp"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-300 mb-2 font-medium">Industry *</label>
+                <label className="block text-gray-700 mb-2 font-medium">Industry *</label>
                 <input
                   type="text"
                   name="industry"
                   value={formData.industry}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
                   placeholder="E-commerce, Consulting, Restaurant, etc."
                 />
               </div>
 
               <div>
-                <label className="block text-gray-300 mb-2 font-medium">Email Address *</label>
+                <label className="block text-gray-700 mb-2 font-medium">Email Address *</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
                   placeholder="you@company.com"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-300 mb-2 font-medium">Phone Number</label>
+                <label className="block text-gray-700 mb-2 font-medium">Phone Number</label>
                 <input
                   type="tel"
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleInputChange}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors"
+                  className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
                   placeholder="+1 (555) 123-4567"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-300 mb-2 font-medium">Current Website Situation *</label>
+                <label className="block text-gray-700 mb-2 font-medium">Current Website Situation *</label>
                 <textarea
                   name="currentSituation"
                   value={formData.currentSituation}
                   onChange={handleInputChange}
                   required
                   rows={3}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors resize-none"
+                  className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all resize-none"
                   placeholder="Do you have a website? Is it outdated? Using social media only?"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-300 mb-2 font-medium">Primary Goal for Your Website *</label>
+                <label className="block text-gray-700 mb-2 font-medium">Primary Goal for Your Website *</label>
                 <textarea
                   name="goal"
                   value={formData.goal}
                   onChange={handleInputChange}
                   required
                   rows={3}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors resize-none"
+                  className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all resize-none"
                   placeholder="Generate leads, showcase portfolio, book appointments, etc."
                 />
               </div>
 
-              <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
-                <p className="text-gray-300 text-sm mb-2">
+              <div className="bg-blue-50/80 backdrop-blur-sm border border-blue-200/50 rounded-xl p-4">
+                <p className="text-gray-700 text-sm mb-2">
                   ✅ By submitting, you confirm you can provide all content (copy, images, branding) for your website.
                 </p>
-                <p className="text-gray-300 text-sm font-semibold">
-                  📌 Note: This offer is for a <span className="text-purple-400">Static Website</span> - perfect for showcasing your business with fixed content pages.
+                <p className="text-gray-700 text-sm font-semibold">
+                  📌 Note: This offer is for a <span className="text-blue-600">Static Website</span> - perfect for showcasing your business with fixed content pages.
                 </p>
               </div>
 
@@ -644,20 +709,20 @@ export default function FreeWebsiteOffer() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className={`p-4 rounded-lg ${
+                  className={`p-4 rounded-xl backdrop-blur-sm ${
                     notification.type === 'success'
-                      ? 'bg-green-500/20 border border-green-500/50'
-                      : 'bg-red-500/20 border border-red-500/50'
+                      ? 'bg-green-50/80 border border-green-200/50'
+                      : 'bg-red-50/80 border border-red-200/50'
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     {notification.type === 'success' ? (
-                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     ) : (
-                      <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                      <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                     )}
                     <p className={`text-sm ${
-                      notification.type === 'success' ? 'text-green-200' : 'text-red-200'
+                      notification.type === 'success' ? 'text-green-700' : 'text-red-700'
                     }`}>
                       {notification.message}
                     </p>
@@ -669,7 +734,7 @@ export default function FreeWebsiteOffer() {
                         url="https://calendly.com/kev-cadogan300/30min"
                         rootElement={document.body}
                         text="Schedule Discovery Call Now"
-                        className="w-full bg-white text-purple-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+                        className="w-full bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 border border-blue-200 shadow-sm"
                       />
                     </div>
                   )}
@@ -681,7 +746,7 @@ export default function FreeWebsiteOffer() {
                 disabled={isSubmitting}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg shadow-blue-200/50 hover:shadow-xl hover:shadow-blue-300/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Application'}
               </motion.button>
@@ -695,18 +760,18 @@ export default function FreeWebsiteOffer() {
       )}
 
       {/* Need More? Consultation CTA */}
-      <section className="py-20 px-6 bg-black/20">
+      <section className="py-20 px-6 bg-gradient-to-b from-white to-gray-50/50">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 backdrop-blur-sm border border-purple-500/40 rounded-3xl p-12 text-center"
+            className="bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-3xl p-12 text-center shadow-xl shadow-gray-200/30"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Need More Than Just a Website?
             </h2>
-            <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 mb-6 max-w-2xl mx-auto">
               Looking for custom solutions, AI integration, or technical consultation? Let's discuss how I can help scale your business.
             </p>
             <motion.a
@@ -715,7 +780,7 @@ export default function FreeWebsiteOffer() {
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-block bg-white text-purple-900 px-10 py-4 rounded-full text-lg font-semibold hover:shadow-2xl hover:shadow-white/20 transition-all duration-300"
+              className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-full text-lg font-semibold shadow-lg shadow-blue-200/50 hover:shadow-xl hover:shadow-blue-300/50 transition-all duration-300"
             >
               View My Portfolio & Services
             </motion.a>
@@ -724,10 +789,10 @@ export default function FreeWebsiteOffer() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-white/10">
+      <footer className="py-12 px-6 border-t border-gray-200/50 bg-white/50 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-gray-400">
-            Built by <a href="https://kevportfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-purple-400 font-semibold hover:text-purple-300 transition-colors">Kevon</a> - Full-Stack Developer & AI Engineer
+          <p className="text-gray-600">
+            Built by <a href="https://kevportfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-semibold hover:text-blue-700 transition-colors">Kevon</a> - Full-Stack Developer & AI Engineer
           </p>
           <p className="text-gray-500 text-sm mt-2">
             Based in Guyana 🇬🇾 • Serving businesses globally
